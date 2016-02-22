@@ -1,6 +1,7 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+import datetime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -26,6 +27,7 @@ class Item(Base):
 	id = Column(Integer, primary_key=True)
 	name = Column(String(50))
 	image = Column(String(200))
+	date_created = Column(DateTime, default=datetime.datetime.now)
 	
 	category_id = Column(Integer, ForeignKey('category.id'))
 	category = relationship("Category", back_populates='item')

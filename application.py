@@ -7,6 +7,8 @@ app = Flask(__name__)
 def showCatalog():
 	"""Page to display categories and recently added (latest) items"""
 	
+
+	
 	return "Page to display categories and recently added (latest) items"
 
 @app.route('/catalog/<category_name>')
@@ -23,7 +25,7 @@ def showItem(category_name, item_name):
 	return """Page to display the description and image of the '{0}' name in the 
 	'{1}' category.""".format(item_name,category_name)
 
-@app.route('/catalog/<category_name>/<item_name>/edit')
+@app.route('/catalog/<category_nsbuame>/<item_name>/edit')
 def editItem(category_name, item_name):
 	"""Page to display for editing an item"""
 

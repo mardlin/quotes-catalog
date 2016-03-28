@@ -1,0 +1,464 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"us",
+				"user_id"
+			],
+			[
+				"res",
+				"restaurants"
+			],
+			[
+				"rest",
+				"restaurant"
+			],
+			[
+				"user",
+				"username"
+			],
+			[
+				"app",
+				"application"
+			],
+			[
+				"userinf",
+				"userinfo_url"
+			],
+			[
+				"Client",
+				"CLIENT_ID"
+			],
+			[
+				"request",
+				"request"
+			],
+			[
+				"access",
+				"access_token"
+			],
+			[
+				"oauth",
+				"oauth_flow"
+			],
+			[
+				"clien",
+				"client_secrets"
+			],
+			[
+				"login",
+				"login_session"
+			],
+			[
+				"sign",
+				"signInCallback"
+			],
+			[
+				"serial",
+				"serializedItems"
+			],
+			[
+				"seri",
+				"serilzedItems"
+			],
+			[
+				"date",
+				"date_created"
+			],
+			[
+				"filet",
+				"filter_by"
+			],
+			[
+				"cate",
+				"category_name"
+			],
+			[
+				"show",
+				"showCategory"
+			],
+			[
+				"file",
+				"filter_by"
+			],
+			[
+				"items",
+				"latest_items"
+			],
+			[
+				"ret",
+				"render_template"
+			],
+			[
+				"lat",
+				"latest_items"
+			],
+			[
+				"categ",
+				"category"
+			],
+			[
+				"__",
+				"__tablename__"
+			],
+			[
+				"Dec",
+				"declarative_base"
+			],
+			[
+				"item",
+				"item_name"
+			],
+			[
+				"cat",
+				"category_name"
+			],
+			[
+				"ca",
+				"category_name"
+			],
+			[
+				"it",
+				"MenuItem"
+			],
+			[
+				"re",
+				"restaurant_id"
+			],
+			[
+				"Men",
+				"MenuItem"
+			],
+			[
+				"p",
+				"placeholder	Attr"
+			],
+			[
+				"edi",
+				"editedItem"
+			],
+			[
+				"menu",
+				"menu_id"
+			],
+			[
+				"new",
+				"new"
+			],
+			[
+				"m",
+				"MenuItem"
+			],
+			[
+				"parse_",
+				"parse_multipart"
+			],
+			[
+				"for",
+				"form-data"
+			],
+			[
+				"parse",
+				"parse_header"
+			],
+			[
+				"send_",
+				"send_header"
+			],
+			[
+				"r",
+				"restaurant_id"
+			],
+			[
+				"name",
+				"name"
+			],
+			[
+				"send",
+				"send_response"
+			],
+			[
+				"message",
+				"messagecontent"
+			],
+			[
+				"Bas",
+				"BaseHTTPRequestHandler"
+			],
+			[
+				"id",
+				"id"
+			],
+			[
+				"jill",
+				"jill"
+			],
+			[
+				"check",
+				"check_occupancy"
+			],
+			[
+				"back",
+				"back_populates"
+			],
+			[
+				"assc",
+				"association_table"
+			],
+			[
+				"puppy",
+				"puppy"
+			],
+			[
+				"pu",
+				"puppy_id"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 146.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/johnmardlin/Udacity/fullstack/oauth/credentials.txt",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/restaurant/database_setup.py",
+		"/Users/johnmardlin/.gitignore_global",
+		"/Users/johnmardlin/.gitconfig",
+		"/Users/johnmardlin/.gitignore",
+		"/Users/johnmardlin/Udacity/fullstack/oauth/.gitignore",
+		"/Users/johnmardlin/Udacity/fullstack/oauth/README.md",
+		"/Users/johnmardlin/Udacity/fullstack/oauth/templates/restaurants.html",
+		"/Users/johnmardlin/Documents/Finance/YNABSampleCSV.csv",
+		"/Users/johnmardlin/Documents/Finance/joint.csv",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/templates/showItem.html",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/templates/showCatalog.html",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/templates/showCategory.html",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/database_setup.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/opensession.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/popdb.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/application.py",
+		"/Users/johnmardlin/Desktop/Hi Sumit,",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/pg_config.sh",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/Vagrantfile",
+		"/Users/johnmardlin/Documents/3D Printing/aaa - Template Prjct/README.md",
+		"/Users/johnmardlin/Projects/urlgen.js",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/problemSet1/database_setup.py",
+		"/Users/johnmardlin/Documents/Finance/mbna-feb22",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/.git/.gitignore",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/catalog/utils/popdb.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/restaurant/templates/editMenuItem.html",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/restaurant/project2.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/restaurant/routingproject.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/restaurant/webserver.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/restaurant/project.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/lesson3/simple-flask.py",
+		"/Users/johnmardlin/Udacity/fullstack/vagrant/fsf/lesson2/webserver.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/restaurant/lotsofmenus.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/restaurant/webserver.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/restaurant/.git/.gitignore",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/restaurant/.gitignore",
+		"/Users/johnmardlin/Projects/ws-messages/data/coinbase/20160210.json",
+		"/Users/johnmardlin/Projects/ws-messages/notes",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/restaurant/crud.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/problemSet1/actions.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/restaurantmenu.db",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/problemSet1/database_setup.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/lesson2/webserver.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/database_setup.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/lotsofmenus.py",
+		"/Users/johnmardlin/Documents/Finance/mbna-0208",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/problemSet1/puppypopulator.py",
+		"/Users/johnmardlin/udacity/fullstack/vagrant/FSF/problemSet1/opensession.py",
+		"/Users/johnmardlin/.bash_profile",
+		"/Users/johnmardlin/git-prompt.sh",
+		"/Users/johnmardlin/.bashrc",
+		"/Users/johnmardlin/git-completion.bash",
+		"/Users/johnmardlin/udacity/play/.git/COMMIT_EDITMSG",
+		"/Users/johnmardlin/udacity/play/newfile.txt"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"restaurant.user_id",
+			"id",
+			"you are now logged in as",
+			"redirect",
+			"message",
+			"successfully",
+			"login_session",
+			"login",
+			"gplus_id",
+			"dumps",
+			"2016",
+			"request",
+			"items = session.query(Item).filter(Item.category.has(name = category_name)).all()",
+			"MenuID",
+			"editedItem",
+			"-->\n",
+			"MenuID",
+			"editMenuItem",
+			"/new",
+			"/new_restaurant",
+			"HTTPServer",
+			"post ",
+			"would",
+			"\\$",
+			"$",
+			"2016",
+			"bailey"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"2016,",
+			"menu_id",
+			"/restaurant/new",
+			",$",
+			"2016,"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "application.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 134.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

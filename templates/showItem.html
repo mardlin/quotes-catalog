@@ -1,0 +1,10 @@
+<html>
+<body>
+	{% if  not item %}
+		<p> No item named '{{ item_name }}' in the '{{ category_name }}' category</p>
+	{% else %}
+		<h2>C: {{ category_name }}
+		<h2>I: {{ item.name }} </h2>
+	{% endif %}
+</body>
+</html>

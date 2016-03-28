@@ -14,27 +14,43 @@ class Category(Base):
 
 	id = Column(Integer, primary_key=True)
 	name = Column(String(50))
-	
-	item = relationship("Item", back_populates='category')
+	items = relationship("Item", back_populates='category')
 
-	# @property
-	# def serialize(self):
-	# 	return {}
+	@property
+	def serialize(self):
+		# create a list of serialized items in the category
+		items_list = []
+		for i in self.items:
+			items_list.append( i.serialize )
+		# this is a dict
+		serial = {
+			'id' : self.id,
+			'name' : self.name,
+			'items' : items_list
+		}
+		return serial
 
 class Item(Base):
 	__tablename__ = 'item'
 
 	id = Column(Integer, primary_key=True)
 	name = Column(String(50))
+	description = Column(String(250))
 	image = Column(String(200))
 	date_created = Column(DateTime, default=datetime.datetime.now)
 	
 	category_id = Column(Integer, ForeignKey('category.id'))
-	category = relationship("Category", back_populates='item')
+	category = relationship("Category", back_populates='items')
 
-	# @property
-	# def serialize(self):
-	# 	return {}
+	@property
+	def serialize(self):
+		return {
+			'id' : self.id,
+			'name': self.name,
+			'description': self.description,
+			'image': self.image,
+			'date_created': self.date_created
+		}
 
 
 engine = create_engine('sqlite:///sporty-catalog.db')

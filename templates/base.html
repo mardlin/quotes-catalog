@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}{% endblock title %}</title>
+    {% endblock head %}
+</head>
+<body>
+    <div id="content">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}    
+        <div class ='flash'>
+            <ul>
+            {% for message in messages %}
+                <li> <strong> {{ message }} </strong> </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock content %}
+    </div>
+
+    <div id="nav">
+        {% block nav %}
+        <h2>Navigation</h2>
+        <ul>
+        <li><a href="{{url_for('showCatalog')}}">showCatalog</a></li>
+        {% block nav_list %}{% endblock nav_list %}
+        </ul>
+        {% endblock nav %}
+    </div>
+
+
+    <div id="footer">
+        {% block footer %}
+        <br/>
+        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
+        {% endblock footer %}
+    </div>
+</body>
+</html>

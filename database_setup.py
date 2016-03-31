@@ -39,6 +39,7 @@ class Item(Base):
 	image = Column(String(200))
 	date_created = Column(DateTime, default=datetime.datetime.now)
 	
+	# Configured so that adding a category_id will also create the relationship
 	category_id = Column(Integer, ForeignKey('category.id'))
 	category = relationship("Category", back_populates='items')
 

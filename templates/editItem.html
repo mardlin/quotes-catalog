@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}editItem{% endblock %}
+
+{% block content %}
+	<p>Edit the {{ item_name }} in the "{{ category_name }}" category:</p> 
+	<p>{{item.name}}</p>
+
+	<form action="{{url_for('editItem', category_name=category_name, item_name=item_name)}}" method="POST"><br/>
+	<label for="name">Item name</label><input type="text" name="name" value="{{ item.name }}"><br/>
+	<label for="description">Description</label><textarea name="description" value="{{ item.description }}"></textarea><br/>
+	<label for="image">Image URL</label><input type="text" name="image" value="{{ item.image }}"><br/>
+	<input type="submit" value="Update item"></input><br/>
+
+{% endblock content %}

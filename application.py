@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify 
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 app = Flask(__name__)
 
 from sqlalchemy import create_engine, desc
@@ -11,6 +11,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+from auth_routes import *
+
 @app.route('/')
 ## consider redirecting this to /catalog to avoid confusion
 @app.route('/catalog')
@@ -22,6 +24,11 @@ def showCatalog():
 
 	return render_template('showCatalog.html', categories=categories, 
 		latest_items=latest_items)
+
+@app.route('/check')
+def check():
+	showCheck()
+	# return "hello!"
 
 @app.route('/catalog.json')
 def showCatalogJSON():
@@ -40,7 +47,7 @@ def showCategory(category_name):
 
 	items = session.query(Item).filter(Item.category.has(name = category_name)).all()
 	return	render_template('showCategory.html', category_name=category_name,
-		items=items)
+			items=items)
 
 @app.route('/catalog/<category_name>.json')
 def showCategoryJSON(category_name):
@@ -51,16 +58,23 @@ def showCategoryJSON(category_name):
 	return	jsonify(category = category.serialize)
 
 
-@app.route('/catalog/<category_name>/<item_name>')
-def showItem(category_name, item_name):
-	"""Page to display the description and image of an item"""
-
+# helper functions
+def getItem(category_name, item_name):
 	category_items = (
 		session.query(Item)
 		.filter( Item.category.has(name=category_name) )
 	)
 	# use .first() to get an empty list if there is no match
 	item = category_items.filter_by(name=item_name).first()
+	return item
+
+
+@app.route('/catalog/<category_name>/<item_name>')
+def showItem(category_name, item_name):
+	"""Page to display the description and image of an item"""
+
+	item = getItem(category_name=category_name, item_name=item_name)
+	
 	return render_template('showItem.html', category_name=category_name,
 			item=item, item_name=item_name)
 
@@ -81,20 +95,58 @@ def showItemJSON(category_name, item_name):
 	    return 'Item does not exist', 404
 
 
-@app.route('/catalog/<category_name>/<item_name>/edit')
+@app.route('/catalog/<category_name>/add', methods=['GET','POST'])
+def addItem(category_name):
+	"""Page to display for adding an item"""
+	
+	category = session.query(Category).filter_by(name=category_name).first()
+	if request.method == 'POST':
+		print request.form
+		new_item=Item(category_id=category.id)
+		new_item.name = request.form['name']
+		new_item.description = request.form['description']
+		new_item.image = request.form['image']
+		session.add(new_item)
+		session.commit()
+		flash('"%s" item successfully added to "%s" category' % 
+			(new_item.name, category_name))
+		return redirect(url_for('showCategory', category_name=category_name))
+	else: 	
+		return render_template('addItem.html', category_name=category_name)
+
+
+@app.route('/catalog/<category_name>/<item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
 	"""Page to display for editing an item"""
+	
+	category = session.query(Category).filter_by(name=category_name).first()
+	itemToEdit = getItem(category_name=category_name, item_name=item_name)
+	if request.method == 'POST':
+		itemToEdit.name = request.form['name']
+		itemToEdit.description = request.form['description']
+		itemToEdit.image = request.form['image']
+		session.add(itemToEdit)
+		session.commit()
+		flash('"%s" item successfully edited in "%s" category' % 
+			(itemToEdit.name, category_name))
+		return redirect(url_for('showItem', category_name=category_name, item_name=itemToEdit.name ))
+	return render_template('editItem.html', category_name=category_name,
+				item_name=item_name, item=itemToEdit)
 
-	return """Page for editing the '{0}' name in the 
-	'{1}' category.""".format(item_name,category_name)
-
-
-@app.route('/catalog/<category_name>/<item_name>/delete')
+@app.route('/catalog/<category_name>/<item_name>/delete', methods=['GET','POST'])
 def deleteItem(category_name, item_name):
 	"""Page to display for deleting an item"""
 
-	return """Page for deleting the '{0}' name in the 
-	'{1}' category.""".format(item_name,category_name)
+	itemToDelete = getItem(category_name=category_name, item_name=item_name)
+	print "item: %s " % itemToDelete
+	if request.method == 'POST':
+		session.delete(itemToDelete)
+		session.commit()
+		flash('"%s" item successfully deleted from "%s" category' % 
+			(item_name, category_name))
+		return redirect(url_for('showCategory', category_name=category_name))
+	return render_template('deleteItem.html', category_name=category_name,
+			item=itemToDelete, item_name=item_name)
 
 
 @app.route('/catalog/<category_name>/items.json')
@@ -120,5 +172,6 @@ def page_not_found(error):
 
 ## This statement detects when the script has been run from the interpreter
 if __name__ == "__main__":
+	app.secret_key = 'super_secret_key'
 	app.debug = True
 	app.run(host = '0.0.0.0', port = 5000)

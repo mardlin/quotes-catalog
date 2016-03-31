@@ -1,18 +1,23 @@
-<html>
-<body>
+{% extends "base.html" %}
 
+<!-- Specify the Title -->
+{% block title %}showCatalog{% endblock %}
+
+<!-- Enter HTML for the div#content -->
+{% block content %}
 <h1>Welcome to my database!</h1>
 <h2>Categories:</h2>
 	{% for c in categories %}
-	<div>
-		<a href="{{url_for('showCategory', category_name = c.name) }} ">{{c.name}}</a>
-	</div>
+	<ul>
+		<li><a href="{{url_for('showCategory', category_name = c.name) }} ">{{c.name}}</a></li>
+	</ul>
 	{% endfor %}
 <h2>Latest items:</h2>
 	{% for i in latest_items %}
-	<div>
-		<a href="{{url_for('showItem', category_name = i.category.name, item_name = i.name) }} ">{{i.name}}</a>
-	</div>
+	<ul>
+		<li><a href="{{url_for('showItem', category_name = i.category.name, item_name = i.name) }} ">{{i.name}}</a></li>
+	</ul>
 	{% endfor %}
-</body>
-</html>
+{% endblock content %}
+
+<!-- Enter HTML for div#footer -->

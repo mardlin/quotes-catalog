@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}createItem{% endblock %}
+
+{% block content %}
+	<p>Create an item in the "{{ category_name }}" category:</p> 
+	<form action="{{url_for('addItem', category_name=category_name)}}" method="POST"><br/>
+	<label for="name">Item name</label><input type="text" name="name"><br/>
+	<label for="description">Description</label><textarea name="description"></textarea><br/>
+	<label for="image">Image URL</label><input type="text" name="image"><br/>
+	<input type="submit" value="Add item"></input><br/>
+
+{% endblock content %}

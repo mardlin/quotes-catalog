@@ -1,34 +1,35 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
-app = Flask(__name__)
+from catalog import app
+from flask import render_template, request, redirect, url_for, jsonify, flash
 
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
 
-engine = create_engine('sqlite:///sporty-catalog.db')
+# login_session will be a dict for storing a user's session variables
+from flask import session as login_session
+# IMPORTS for anti-forgergy state tokens
+import random, string
+
+engine = create_engine('sqlite:///sporty-catalog2.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-from auth_routes import *
-
 @app.route('/')
-## consider redirecting this to /catalog to avoid confusion
+def redirectToCatalog():
+	"""Make the home page be /catalog"""
+
+	return redirect(url_for('showCatalog'))
+
 @app.route('/catalog')
 def showCatalog():
 	"""Page to display categories and recently added (latest) items"""
-
 	categories = session.query(Category).all()
 	latest_items = session.query(Item).order_by(desc(Item.date_created)).limit(3)
 
 	return render_template('showCatalog.html', categories=categories, 
 		latest_items=latest_items)
-
-@app.route('/check')
-def check():
-	showCheck()
-	# return "hello!"
 
 @app.route('/catalog.json')
 def showCatalogJSON():
@@ -168,10 +169,3 @@ def jsonCategory(category_name):
 @app.errorhandler(404)
 def page_not_found(error):
     return 'This page does not exist', 404
-
-
-## This statement detects when the script has been run from the interpreter
-if __name__ == "__main__":
-	app.secret_key = 'super_secret_key'
-	app.debug = True
-	app.run(host = '0.0.0.0', port = 5000)

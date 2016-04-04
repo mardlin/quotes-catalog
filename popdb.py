@@ -4,7 +4,7 @@ from database_setup import Base, Category, Item
 
 from pprint import pprint
 
-engine = create_engine('sqlite:///sporty-catalog.db')
+engine = create_engine('sqlite:///sporty-catalog2.db')
 
 Base.metadata.bind = engine
 

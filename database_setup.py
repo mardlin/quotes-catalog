@@ -54,5 +54,5 @@ class Item(Base):
 		}
 
 
-engine = create_engine('sqlite:///sporty-catalog.db')
+engine = create_engine('sqlite:///sporty-catalog2.db')
 Base.metadata.create_all(engine)

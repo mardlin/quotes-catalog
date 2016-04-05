@@ -1,16 +1,17 @@
 from catalog import app
-from flask import render_template, request, redirect, url_for, jsonify, flash
+from flask import render_template, request, redirect, url_for
+from flask import jsonify, flash, make_response
 
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item
+from database_setup import Base, Category, Item, User
 
 # login_session will be a dict for storing a user's session variables
 from flask import session as login_session
 # IMPORTS for anti-forgergy state tokens
 import random, string
 
-engine = create_engine('sqlite:///sporty-catalog2.db')
+engine = create_engine('sqlite:///sporty-catalog3.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -63,7 +64,7 @@ def showCategoryJSON(category_name):
 def getItem(category_name, item_name):
 	category_items = (
 		session.query(Item)
-		.filter( Item.category.has(name=category_name) )
+    	.filter( Item.category.has(name=category_name) )
 	)
 	# use .first() to get an empty list if there is no match
 	item = category_items.filter_by(name=item_name).first()

@@ -9,6 +9,29 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+class User(Base):
+	__tablename__ = 'user'
+
+	id = Column(Integer, primary_key=True)
+	name = Column(String(100))
+	email = Column(String(100))	
+	picture = Column(String(250), nullable=False)
+
+	# Set up a one-many (user-restaurant) relationship
+	category = relationship("Category", back_populates="user")
+	item = relationship("Item", back_populates="user")
+
+	@property
+	def serialize(self):
+		"""Return object data in easily serializeable format"""
+		return {
+			'name'         : self.name,
+			'id'           : self.id,
+			'email'        : self.email,
+			'picture'      : self.picture,
+	   }
+
+
 class Category(Base):
 	__tablename__ = 'category'
 
@@ -16,13 +39,15 @@ class Category(Base):
 	name = Column(String(50))
 	items = relationship("Item", back_populates='category')
 
+	user_id = Column(Integer, ForeignKey("user.id"))
+	user = relationship("User")
+
 	@property
 	def serialize(self):
 		# create a list of serialized items in the category
 		items_list = []
 		for i in self.items:
 			items_list.append( i.serialize )
-		# this is a dict
 		serial = {
 			'id' : self.id,
 			'name' : self.name,
@@ -43,6 +68,9 @@ class Item(Base):
 	category_id = Column(Integer, ForeignKey('category.id'))
 	category = relationship("Category", back_populates='items')
 
+	user_id = Column(Integer, ForeignKey("user.id"))
+	user = relationship("User")
+
 	@property
 	def serialize(self):
 		return {
@@ -54,5 +82,5 @@ class Item(Base):
 		}
 
 
-engine = create_engine('sqlite:///sporty-catalog2.db')
+engine = create_engine('sqlite:///sporty-catalog3.db')
 Base.metadata.create_all(engine)

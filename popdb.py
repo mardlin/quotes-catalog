@@ -1,15 +1,21 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item
+from database_setup import Base, Category, Item, User
 
 from pprint import pprint
 
-engine = create_engine('sqlite:///sporty-catalog2.db')
+engine = create_engine('sqlite:///sporty-catalog3.db')
 
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
+
+# Create dummy user
+User1 = User(name="Bort", email="bort@email.com",
+             picture='https://placeholder.it/100/100')
+session.add(User1)
+session.commit()
 
 categories = [
 	[ 
@@ -41,7 +47,8 @@ for category in categories:
 	current_category = category[0]
 	session.add(current_category)
 	for item in category[1]:
-		item.category= current_category
+		item.category = current_category
+		item.user = User1
 		session.add(item)
 	session.commit()
 

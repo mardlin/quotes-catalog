@@ -4,7 +4,7 @@ from flask import jsonify, flash, make_response
 
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item # , User
+from database_setup import Base, Category, Item, User
 
 # login_session will be a dict for storing a user's session variables
 from flask import session as login_session
@@ -19,17 +19,19 @@ import requests
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
-
-
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
-
-
-engine = create_engine('sqlite:///sporty-catalog2.db')
+engine = create_engine('sqlite:///sporty-catalog3.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+# Inject login_session to standard context for templates 
+@app.context_processor
+def inject_login_session():
+	return dict(login_session=login_session)
+
 
 @app.route('/login')
 def showLogin():
@@ -43,24 +45,24 @@ def showLogin():
 
 # Define user helper functions step2
 
-# def createUser(login_session):
-#   newUser = User(name = login_session['username'], email = login_session['email'],
-#     picture = login_session['picture'])
-#   session.add(newUser)
-#   session.commit()
-#   user = session.query(User).filter_by(email=login_session['email']).one()
-#   return user.id
+def createUser(login_session):
+  newUser = User(name = login_session['username'], email = login_session['email'],
+    picture = login_session['picture'])
+  session.add(newUser)
+  session.commit()
+  user = session.query(User).filter_by(email=login_session['email']).one()
+  return user.id
 
-# def getUserInfo(user_id):
-#   user = session.query(User).get(user_id)
-#   return user
+def getUserInfo(user_id):
+  user = session.query(User).get(user_id)
+  return user
 
-# def getUserID(email):
-#   try:
-#     user = session.query(User).filter_by(email=email).one()
-#     return user.id
-#   except: 
-#     return None
+def getUserID(email):
+  try:
+    user = session.query(User).filter_by(email=email).one()
+    return user.id
+  except: 
+    return None
 
 
 # Post only route called by the Google SDK script in the client when
@@ -68,7 +70,7 @@ def showLogin():
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
 	## 1: Verify that the client state matches the state sent by the server
-	# to verify that it is the same client. 
+	# to make sure that it is the same client. 
 	if request.args.get('state') != login_session['state']:
 		# response = make_response(json.dumps('Invalid state parameter'), 401)
 		response = make_response('Invalid state parameter', 401)
@@ -84,7 +86,6 @@ def gconnect():
 		oauth_flow.redirect_uri = 'postmessage'
 		credentials = oauth_flow.step2_exchange(code)
 	except FlowExchangeError:
-		# handle the eror
 		response = make_response( 
 		json.dumps('Failed to upgrade the authorization code.'), 401)
 		response.headers['Content-Type'] = 'application/json'
@@ -106,32 +107,30 @@ def gconnect():
 		response.headers['Content-Type'] = 'application/json'
 		return response
 
-	# # 3.3: Verify User
-	#   # Verify that the access token is for this user by comparing the original
-	#   # credentials object to the token_info response
+	# 3.3: Verify User
+	  # Verify that the access token is for this user by comparing the original
+	  # credentials object to the token_info response
 	gplus_id = credentials.id_token['sub'] 
 	if result['user_id'] != gplus_id:
-	  response = make_response(json.dumps("This token is for the wrong user"), 401)
-  	  response.headers['Content-Type'] = 'application/json'
-	  return response
-
-	# # 3.4 Verify App
-	#   # Verify that the access token is valid for this app
-	if result['issued_to'] != CLIENT_ID:
-		response = make_response(
-		        json.dumps("Token's client ID does not match app's."), 401)
+		response = make_response(json.dumps("This token is for the wrong user"), 401)
 		response.headers['Content-Type'] = 'application/json'
 		return response
 
+	# 3.4 Verify App
+	# Verify that the access token is valid for this app
+	if result['issued_to'] != CLIENT_ID:
+		response = make_response(
+			json.dumps("Token's client ID does not match app's."), 401)
+		response.headers['Content-Type'] = 'application/json'
+		return response
+
+	# 3.5 Verify that user isn't already connected 
 	stored_credentials = login_session.get('credentials')
-	print "stored credentials %s" % stored_credentials
   	stored_gplus_id = login_session.get('gplus_id')
-  	# if stored_credentials is not None and gplus_id == stored_gplus_id:
-  	# 	# print "stored credentials %s" % stored_credentials
-  	# 	foo = 1
-  	# 	# foo = make_response(json.dumps('Current user is already connected.'), 200)
-  	# 	# response.headers['Content-Type'] = 'application/json'
-   #  	return foo
+  	if stored_credentials is not None and gplus_id == stored_gplus_id:
+		response = make_response(json.dumps('Current user is already connected.'), 200)
+		response.headers['Content-Type'] = 'application/json'
+		return response
 
   	# Store the access token in the session for later use.
   	login_session['provider'] = 'google'
@@ -152,17 +151,17 @@ def gconnect():
   
 
 	# Check to see if user is already in our DB 
-	# user_id = getUserID(login_session['email'])
+	user_id = getUserID(login_session['email'])
 
-	# if user_id is None:
-	#     user_id = createUser(login_session)
+	if user_id is None:
+	    user_id = createUser(login_session)
   
-	# login_session['user_id'] = user_id
-	# user_info = getUserInfo(user_id)
+	login_session['user_id'] = user_id
+	user_info = getUserInfo(user_id)
 
 	# prefer local username and picture to g+ data 
-	# login_session['username'] = user_info.name
-	# login_session['picture'] = user_info.picture
+	login_session['username'] = user_info.name
+	login_session['picture'] = user_info.picture
 
 	output = 'something'
 	output += '<h1>Welcome, '
@@ -175,6 +174,18 @@ def gconnect():
 	flash("you are now logged in")
 	print "done!"
 	return output
+
+
+@app.route('/logout')
+def showLogout():
+	# make sure user is actually logged in
+	# 
+
+	# Delete login_session variables
+	for ls in login_session:
+		del ls
+	flash('User logged out')
+	return redirect(url_for('showCatalog'))
 
 
 

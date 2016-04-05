@@ -39,7 +39,6 @@ def showLogin():
 		
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
 	login_session['state'] = state
-	print login_session
 	# return "The current session state is %s" % login_session['state']
 	return render_template('/login.html', STATE=state)
 
@@ -180,11 +179,15 @@ def gconnect():
 def showLogout():
 	# make sure user is actually logged in
 	# 
-
+	print login_session
 	# Delete login_session variables
-	for ls in login_session:
-		del ls
-	flash('User logged out')
+	del login_session['username']
+	del login_session['email']
+	del login_session['picture']
+	del login_session['user_id']
+	del login_session['provider']
+	del login_session['gplus_id']
+	print login_session
 	return redirect(url_for('showCatalog'))
 
 

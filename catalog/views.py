@@ -1,6 +1,7 @@
 from catalog import app
 from flask import render_template, request, redirect, url_for
 from flask import jsonify, flash, make_response
+from flask.ext.seasurf import SeaSurf
 
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
@@ -10,6 +11,10 @@ from database_setup import Base, Category, Item, User
 from flask import session as login_session
 # IMPORTS for anti-forgergy state tokens
 import random, string
+
+# import and initialize SeaSurf for CSRF protection
+from flask.ext.seasurf import SeaSurf
+csrf = SeaSurf(app)
 
 engine = create_engine('sqlite:///sporty-catalog3.db')
 Base.metadata.bind = engine
@@ -78,7 +83,7 @@ def showItem(category_name, item_name):
 	item = getItem(category_name=category_name, item_name=item_name)
 	
 	return render_template('showItem.html', category_name=category_name,
-			item=item, item_name=item_name)
+			item=item, item_name=item_name, item_creator=item.user_id)
 
 @app.route('/catalog/<category_name>/<item_name>.json')
 def showItemJSON(category_name, item_name):
@@ -101,6 +106,12 @@ def showItemJSON(category_name, item_name):
 def addItem(category_name):
 	"""Page to display for adding an item"""
 	
+	user_id=login_session.get('user_id')
+	if user_id is None:
+		flash("You must login to add an item")
+		return redirect(url_for('showCategory',category_name=category_name))
+
+
 	category = session.query(Category).filter_by(name=category_name).first()
 	if request.method == 'POST':
 		print request.form
@@ -108,6 +119,7 @@ def addItem(category_name):
 		new_item.name = request.form['name']
 		new_item.description = request.form['description']
 		new_item.image = request.form['image']
+		new_item.user_id = login_session['user_id']
 		session.add(new_item)
 		session.commit()
 		flash('"%s" item successfully added to "%s" category' % 
@@ -123,6 +135,12 @@ def editItem(category_name, item_name):
 	
 	category = session.query(Category).filter_by(name=category_name).first()
 	itemToEdit = getItem(category_name=category_name, item_name=item_name)
+
+
+	if login_session['user_id'] != itemToEdit.user_id:
+		flash("Only the item's creator can edit an item")
+		return redirect(url_for('showItem',category_name=category_name, item_name=item_name))
+
 	if request.method == 'POST':
 		itemToEdit.name = request.form['name']
 		itemToEdit.description = request.form['description']
@@ -140,7 +158,10 @@ def deleteItem(category_name, item_name):
 	"""Page to display for deleting an item"""
 
 	itemToDelete = getItem(category_name=category_name, item_name=item_name)
-	print "item: %s " % itemToDelete
+	if login_session['user_id'] != itemToDelete.user_id:
+		flash("Only the item's creator can delete an item")
+		return redirect(url_for('showItem',category_name=category_name, item_name=item_name))
+
 	if request.method == 'POST':
 		session.delete(itemToDelete)
 		session.commit()
@@ -148,7 +169,7 @@ def deleteItem(category_name, item_name):
 			(item_name, category_name))
 		return redirect(url_for('showCategory', category_name=category_name))
 	return render_template('deleteItem.html', category_name=category_name,
-			item=itemToDelete, item_name=item_name)
+				item=itemToDelete, item_name=item_name)
 
 
 @app.route('/catalog/<category_name>/items.json')

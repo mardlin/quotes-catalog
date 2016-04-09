@@ -10,6 +10,7 @@
 	<label for="name">Item name</label><input type="text" name="name" value="{{ item.name }}"><br/>
 	<label for="description">Description</label><textarea name="description" value="{{ item.description }}"></textarea><br/>
 	<label for="image">Image URL</label><input type="text" name="image" value="{{ item.image }}"><br/>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 	<input type="submit" value="Update item"></input><br/>
 
 {% endblock content %}

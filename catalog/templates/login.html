@@ -28,7 +28,7 @@
 </div>
 <!--END GOOGLE PLUS BUTTON -->
 <script> 
-// I think the response from google's server is passed to this callback function
+// The response from google's server is passed to this callback function
 function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
@@ -37,11 +37,15 @@ function signInCallback(authResult) {
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
     $.ajax({
       type: 'POST',
-      url: '/gconnect?state={{STATE}}',
+      // url: '/gconnect?state={{STATE}}',
+      url: '/gconnect',
       processData: false,
       // this data is then sent to our server
-      data: authResult['code'], 
+      data: authResult['code'],
       contentType: 'application/octet-stream; charset=utf-8',
+      headers: { 
+        'X-CSRFToken': '{{ csrf_token() }}'
+      },
       // the success callback function handles the response from our server
       success: function(result) {
         console.log(result);

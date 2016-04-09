@@ -19,6 +19,11 @@ import requests
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
+# import and initialize SeaSurf for CSRF protection
+from flask.ext.seasurf import SeaSurf
+csrf = SeaSurf(app)
+
+
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
 engine = create_engine('sqlite:///sporty-catalog3.db')
@@ -27,7 +32,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# Inject login_session to standard context for templates 
+# Inject login_session to standard context for templates for easy access
+# without having to include it explicitly each time
 @app.context_processor
 def inject_login_session():
 	return dict(login_session=login_session)
@@ -39,11 +45,9 @@ def showLogin():
 		
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
 	login_session['state'] = state
-	# return "The current session state is %s" % login_session['state']
 	return render_template('/login.html', STATE=state)
 
-# Define user helper functions step2
-
+# helper functions for interacting with the User model
 def createUser(login_session):
   newUser = User(name = login_session['username'], email = login_session['email'],
     picture = login_session['picture'])
@@ -68,14 +72,7 @@ def getUserID(email):
 # a user grants permission to our app
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-	## 1: Verify that the client state matches the state sent by the server
-	# to make sure that it is the same client. 
-	if request.args.get('state') != login_session['state']:
-		# response = make_response(json.dumps('Invalid state parameter'), 401)
-		response = make_response('Invalid state parameter', 401)
-		response.headers['Content-Type']='text'
-		return response
-	# Obtain authorization code
+	## 1: Obtain authorization code
 	code = request.data
 
 	## 2: Attempt to exchange code with G+ server for an access token
@@ -133,7 +130,7 @@ def gconnect():
 
   	# Store the access token in the session for later use.
   	login_session['provider'] = 'google'
-  	# login_session['credentials'] = credentials
+  	login_session['access_token'] = credentials.access_token
   	login_session['gplus_id'] = gplus_id
 
 	# Well, OK then, so we've tucked those guys away
@@ -177,8 +174,15 @@ def gconnect():
 
 @app.route('/logout')
 def showLogout():
-	# make sure user is actually logged in
-	# 
+	# Make sure user is actually logged in
+	if 'provider' in login_session:
+		if login_session['provider'] == 'google':
+			del login_session['gplus_id']
+			del login_session['access_token']
+	if 'user_id' not in login_session:
+		flash("There's no one to log out")
+		return redirect(url_for('showCatalog'))
+
 	print login_session
 	# Delete login_session variables
 	del login_session['username']
@@ -186,8 +190,7 @@ def showLogout():
 	del login_session['picture']
 	del login_session['user_id']
 	del login_session['provider']
-	del login_session['gplus_id']
-	print login_session
+	flash("You're logged out")
 	return redirect(url_for('showCatalog'))
 
 

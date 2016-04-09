@@ -11,6 +11,10 @@ from flask import session as login_session
 # IMPORTS for anti-forgergy state tokens
 import random, string
 
+# import and initialize SeaSurf for CSRF protection
+# from flask.ext.seasurf import SeaSurf
+# csrf = SeaSurf(app)
+
 engine = create_engine('sqlite:///sporty-catalog3.db')
 Base.metadata.bind = engine
 

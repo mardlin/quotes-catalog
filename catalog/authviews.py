@@ -72,14 +72,7 @@ def getUserID(email):
 # a user grants permission to our app
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-	## 1: Verify that the client state matches the state sent by the server
-	# to make sure that it is the same client. 
-	if request.args.get('state') != login_session['state']:
-		# response = make_response(json.dumps('Invalid state parameter'), 401)
-		response = make_response('Invalid state parameter', 401)
-		response.headers['Content-Type']='text'
-		return response
-	# Obtain authorization code
+	## 1: Obtain authorization code
 	code = request.data
 
 	## 2: Attempt to exchange code with G+ server for an access token
@@ -137,7 +130,7 @@ def gconnect():
 
   	# Store the access token in the session for later use.
   	login_session['provider'] = 'google'
-  	# login_session['credentials'] = credentials
+  	login_session['access_token'] = credentials.access_token
   	login_session['gplus_id'] = gplus_id
 
 	# Well, OK then, so we've tucked those guys away
@@ -185,7 +178,8 @@ def showLogout():
 	if 'provider' in login_session:
 		if login_session['provider'] == 'google':
 			del login_session['gplus_id']
-			del login_session['credentials']
+			del login_session['access_token']
+
 	if 'user_id' not in login_session:
 		flash("There's no one to log out")
 		return redirect(url_for('showCatalog'))
@@ -197,7 +191,6 @@ def showLogout():
 	del login_session['picture']
 	del login_session['user_id']
 	del login_session['provider']
-	del login_session['gplus_id']
 	flash("You're logged out")
 	return redirect(url_for('showCatalog'))
 

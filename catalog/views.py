@@ -69,7 +69,7 @@ def showCategoryJSON(category_name):
 def getItem(category_name, item_name):
 	category_items = (
 		session.query(Item)
-    	.filter( Item.category.has(name=category_name) )
+		.filter( Item.category.has(name=category_name) )
 	)
 	# use .first() to get an empty list if there is no match
 	item = category_items.filter_by(name=item_name).first()
@@ -99,7 +99,7 @@ def showItemJSON(category_name, item_name):
 	if item:
 		return jsonify(item = item.serialize)
 	else: 
-	    return 'Item does not exist', 404
+		return 'Item does not exist', 404
 
 
 @app.route('/catalog/<category_name>/add', methods=['GET','POST'])
@@ -107,10 +107,11 @@ def addItem(category_name):
 	"""Page to display for adding an item"""
 	
 	user_id=login_session.get('user_id')
+	user_id=login_session.get('user_id') 
+
 	if user_id is None:
 		flash("You must login to add an item")
 		return redirect(url_for('showCategory',category_name=category_name))
-
 
 	category = session.query(Category).filter_by(name=category_name).first()
 	if request.method == 'POST':
@@ -120,6 +121,7 @@ def addItem(category_name):
 		new_item.description = request.form['description']
 		new_item.image = request.form['image']
 		new_item.user_id = login_session['user_id']
+
 		session.add(new_item)
 		session.commit()
 		flash('"%s" item successfully added to "%s" category' % 
@@ -190,4 +192,4 @@ def jsonCategory(category_name):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return 'This page does not exist', 404
+	return 'This page does not exist', 404

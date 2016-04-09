@@ -8,13 +8,15 @@
 </head>
 <body>
     <h1>This website talks to a DB</h1>
-    {% if login_session['username'] %}
+    {# Display login or logout depending on state #}
+    {% if login_session.get('username') is not none %}
         Hello {{ login_session['username'] }}!
         <a href="{{ url_for('showLogout')}}">Logout</a>
     {% else %}
         <a href="{{ url_for('showLogin')}}">Login</a>
     {% endif %}
     <div id="content">
+    {# message flashing section #}
     {% with messages = get_flashed_messages() %}
       {% if messages %}    
         <div class ='flash'>
@@ -34,7 +36,7 @@
         {% block nav %}
         <h2>Navigation</h2>
         <ul>
-        <li><a href="{{url_for('showCatalog')}}">showCatalog</a></li>
+            <li><a href="{{url_for('showCatalog')}}">showCatalog</a></li>
         {% block nav_list %}{% endblock nav_list %}
         </ul>
         {% endblock nav %}

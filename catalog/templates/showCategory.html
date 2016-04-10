@@ -8,7 +8,7 @@
             <ul class="nav list-group">
             {% for i in items %}
                 <li>
-                    <a href="{{url_for('showItem', category_name=category_name, item_name=i.name) }} ">{{i.name}}</a>
+                    <a class="list-group-item" href="{{url_for('showItem', category_name=category_name, item_name=i.name) }} ">{{i.name}}</a>
                 </li>
             {% endfor %}
             </ul>

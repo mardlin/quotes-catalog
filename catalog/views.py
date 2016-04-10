@@ -28,13 +28,8 @@ def inject_categories():
 	categories = session.query(Category).all()
 	return dict(categories=categories)
 
+@app.route('/themes')
 @app.route('/')
-def redirectToCatalog():
-	"""Make the home page be /catalog"""
-
-	return redirect(url_for('showCatalog'))
-
-@app.route('/catalog')
 def showCatalog():
 	"""Page to display categories and recently added (latest) items"""
 
@@ -43,7 +38,7 @@ def showCatalog():
 	return render_template('showCatalog.html', 
 		latest_items=latest_items)
 
-@app.route('/catalog.json')
+@app.route('/themes.json')
 def showCatalogJSON():
 	"""Page to display categories and recently added (latest) items"""
 
@@ -53,8 +48,8 @@ def showCatalogJSON():
 		category_list.append(c.serialize)
 	return jsonify(category = category_list)
 
-@app.route('/catalog/<category_name>')
-@app.route('/catalog/<category_name>/items')
+@app.route('/themes/<category_name>/quotes')
+@app.route('/themes/<category_name>')
 def showCategory(category_name):
 	"""Page to display items in a given category"""
 
@@ -62,7 +57,7 @@ def showCategory(category_name):
 	return	render_template('showCategory.html', category_name=category_name,
 			items=items)
 
-@app.route('/catalog/<category_name>.json')
+@app.route('/themes/<category_name>.json')
 def showCategoryJSON(category_name):
 	"""Page to display items in a given category"""
 
@@ -81,8 +76,7 @@ def getItem(category_name, item_name):
 	item = category_items.filter_by(name=item_name).first()
 	return item
 
-
-@app.route('/catalog/<category_name>/<item_name>')
+@app.route('/themes/<category_name>/<item_name>')
 def showItem(category_name, item_name):
 	"""Page to display the description and image of an item"""
 
@@ -91,7 +85,7 @@ def showItem(category_name, item_name):
 	return render_template('showItem.html', category_name=category_name, items=items,
 			item=item, item_name=item_name, item_creator=item.user_id)
 
-@app.route('/catalog/<category_name>/<item_name>.json')
+@app.route('/themes/<category_name>/<item_name>.json')
 def showItemJSON(category_name, item_name):
 	"""Page to display the description and image of an item"""
 
@@ -101,8 +95,7 @@ def showItemJSON(category_name, item_name):
 	else: 
 		return 'Item does not exist', 404
 
-
-@app.route('/catalog/<category_name>/add', methods=['GET','POST'])
+@app.route('/themes/<category_name>/add', methods=['GET','POST'])
 def addItem(category_name):
 	"""Page to display for adding an item"""
 	
@@ -130,8 +123,7 @@ def addItem(category_name):
 	else: 	
 		return render_template('addItem.html', category_name=category_name)
 
-
-@app.route('/catalog/<category_name>/<item_name>/edit', methods=['GET', 'POST'])
+@app.route('/themes/<category_name>/<item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
 	"""Page to display for editing an item"""
 	
@@ -155,7 +147,7 @@ def editItem(category_name, item_name):
 	return render_template('editItem.html', category_name=category_name,
 				item_name=item_name, item=itemToEdit)
 
-@app.route('/catalog/<category_name>/<item_name>/delete', methods=['GET','POST'])
+@app.route('/themes/<category_name>/<item_name>/delete', methods=['GET','POST'])
 def deleteItem(category_name, item_name):
 	"""Page to display for deleting an item"""
 
@@ -174,15 +166,15 @@ def deleteItem(category_name, item_name):
 				item=itemToDelete, item_name=item_name)
 
 
-@app.route('/catalog/<category_name>/items.json')
+@app.route('/themes/<category_name>/quotes.json')
 def jsonCategory(category_name):
 	"""return data in a json format. It might be better to create these 
 	endpoints by extending the pre-existing routes. Fortunately, we only 
 	need GET endpoints
 	GET: 
-	/catalog.json
-	/<category_name>/items.json
-	/catalog/<category_name>/<item_name>.json
+	/themes.json
+	/<category_name>/quotes.json
+	/themes/<category_name>/<item_name>.json
 	"""
 
 	return jsonify({

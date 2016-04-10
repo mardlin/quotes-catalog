@@ -22,6 +22,12 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+#  We'll need the categories in all templates for the header menu
+@app.context_processor
+def inject_categories():
+	categories = session.query(Category).all()
+	return dict(categories=categories)
+
 @app.route('/')
 def redirectToCatalog():
 	"""Make the home page be /catalog"""
@@ -31,10 +37,10 @@ def redirectToCatalog():
 @app.route('/catalog')
 def showCatalog():
 	"""Page to display categories and recently added (latest) items"""
-	categories = session.query(Category).all()
+
 	latest_items = session.query(Item).order_by(desc(Item.date_created)).limit(3)
 
-	return render_template('showCatalog.html', categories=categories, 
+	return render_template('showCatalog.html', 
 		latest_items=latest_items)
 
 @app.route('/catalog.json')
@@ -81,21 +87,15 @@ def showItem(category_name, item_name):
 	"""Page to display the description and image of an item"""
 
 	item = getItem(category_name=category_name, item_name=item_name)
-	
-	return render_template('showItem.html', category_name=category_name,
+	items = session.query(Item).filter(Item.category.has(name = category_name)).all()
+	return render_template('showItem.html', category_name=category_name, items=items,
 			item=item, item_name=item_name, item_creator=item.user_id)
 
 @app.route('/catalog/<category_name>/<item_name>.json')
 def showItemJSON(category_name, item_name):
 	"""Page to display the description and image of an item"""
 
-	category_items = (
-		session.query(Item)
-		.filter( Item.category.has(name=category_name) )
-	)
-	# use .first() to get an empty list if there is no match
-	item = category_items.filter_by(name=item_name).first()
-
+	item = getItem(category_name=category_name, item_name=item_name)
 	if item:
 		return jsonify(item = item.serialize)
 	else: 

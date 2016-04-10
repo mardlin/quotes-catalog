@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "showCategory.html" %}
 
 <!-- Specify the Title -->
-{% block title %}showItem{% endblock %}
+{# {% block title %}showItem{% endblock %} #}
 
 <!-- Enter HTML for the div#content -->
 {% block content %}
+	<h2>{{ category_name }}</h2>
 	{% if not item %}
 		<p> No item named '{{ item_name }}' in the '{{ category_name }}' category</p>
 	{% else %}
-		<h2>{{ category_name }}</h2>
 		<h3>{{ item.name }} </h3>
 		<p> {{ item.description}} </p>
 		<p> {{ item.image }} </p>

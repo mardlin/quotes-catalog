@@ -1,53 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>{% block title %}{% endblock title %}</title>
-    {% endblock head %}
-</head>
-<body>
-    <h1>This website talks to a DB</h1>
-    {# Display login or logout depending on state #}
-    {% if login_session.get('username') is not none %}
-        Hello {{ login_session['username'] }}!
-        <a href="{{ url_for('showLogout')}}">Logout</a>
-    {% else %}
-        <a href="{{ url_for('showLogin')}}">Login</a>
-    {% endif %}
-    <div id="content">
-    {# message flashing section #}
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}    
-        <div class ='flash'>
-            <ul>
-            {% for message in messages %}
-                <li> <strong> {{ message }} </strong> </li>
-            {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-    {% endwith %}
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock title %}</title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" >
+        {# <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" > #}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    {% block content %}{% endblock content %}
+
+        <!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+<div id="header" class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+            <i class="icon-reorder"></i>
+        </button>
+        <a class="navbar-brand" href="/">
+            Wordly Wisdom
+        </a>
     </div>
-
-    <div id="nav">
-        {% block nav %}
-        <h2>Navigation</h2>
-        <ul>
-            <li><a href="{{url_for('showCatalog')}}">Home</a></li>
-            {% block nav_list %}{% endblock nav_list %}
+    <nav class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Quotes About...<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    {% for c in categories %}
+                        <li><a href="{{url_for('showCategory', category_name = c.name) }} ">{{c.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
         </ul>
-        {% endblock nav %}
+        <ul class="nav navbar-nav pull-right">
+            {# Display login or logout depending on state #}
+            {% if login_session.get('username') is not none %}
+            <li class="dropdown">
+                <a href="#" id="nbAcctDD" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>{{ login_session['username'] }}<i class="icon-sort-down"></i><b class="caret"></b></a>
+                <ul class="dropdown-menu pull-right">
+                    <li><a href="{{ url_for('showLogout')}}">Logout</a></li>
+                </ul>
+            </li>
+            {% else %}
+            <li>
+                <a href="{{ url_for('showLogin')}}" ><i class="icon-user"></i>Login<i class="icon-sort-down"></i></a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<div id="wrapper">
+    {% block sidebar %}
+    {% endblock sidebar %}
+    <div id="main-wrapper" class="col-md-10 pull-right">
+        <div id="main">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}    
+            <div class="alert alert-info" role="alert">
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endwith %}    
+        {% block content %}
+            <div class="page-header">
+                <h3>What wisdom do you seek?</h3>
+                <p>Select a topic from the dropdown</p>
+            </div>
+        {% endblock content %}
+        </div>
     </div>
-
-
-    <div id="footer">
-        {% block footer %}
-        <br/>
-        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
-        {% endblock footer %}
-    </div>
-</body>
+</div>
+    <!-- script references -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    </body>
 </html>

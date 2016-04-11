@@ -2,7 +2,7 @@
 
 A repository of quotations, organized thematically. I built this for Project 3 of the Udacity Fullstack Nanodegree. The project is focused on backend code, not prettiness. 
 
-NB for the Udacity Reviewer: the namespace of the back-end is in keeping with the catalog app created in the related course. ie. categories and items. 
+NB for the Udacity Reviewer: the namespace of the front end of this site is organize by themes>quotes. The backend is in keeping with the catalog app created in the related course, and the namespace is organize by categories>items
 
 ## Installation
 
@@ -25,6 +25,7 @@ In your browser visit http://0.0.0.0:5000 to view the site.
 ## API
 
 There are three JSON endpoints for retrieving quotes:
+
 1. /themes/json
-2. /themes/<category_name>/json
-3. /themes/<category_name>/<item_name>/json
+2. /themes/[category_name]/json
+3. /themes/[category_name]/[item_name]/json

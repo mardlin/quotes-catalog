@@ -1,0 +1,8 @@
+# DB files 
+*.db
+
+# Client Secrets
+*.json
+
+# Compiled source code
+*.pyc

@@ -6,13 +6,10 @@
 	<p>Add a "{{ category_name }}" quote:</p> 
 	<form action="{{url_for('addItem', category_name=category_name)}}" method="POST">
 		<div class="form-group">
-			<label for="name">What is your quote about?:</label><input class="form-control" type="text" name="name" placeholder="In 2 or 3 words"><br/>
-		</div>
-		<div class="form-group">
 			<label for="description">The Quote</label><textarea class="form-control" name="description"></textarea><br/>
 		</div>
 		<div class="form-group">
-			<label for="image">Who said it?</label><input class="form-control" type="text" name="image"><br/>
+			<label for="author">Who said it?</label><input class="form-control" type="text" name="author"><br/>
 		</div>
 		<div class="form-group">
 		    <input class="form-control" type="hidden" name="_csrf_token" value="{{ csrf_token() }}">

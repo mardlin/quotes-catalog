@@ -5,13 +5,14 @@
 
 <!-- Enter HTML for the div#content -->
 {% block content %}
-	<h2>{{ category_name }}</h2>
 	{% if not item %}
 		<p> No item named '{{ item_name }}' in the '{{ category_name }}' category</p>
 	{% else %}
-		<h3>{{ item.name }} </h3>
-		<p> {{ item.description}} </p>
-		<p> {{ item.image }} </p>
+		<h5>{{ item.name }} </h5>
+		<blockquote>
+			<p class="lead"> {{ item.description}} </p>
+		</blockquote>
+		<p> - {{ item.author }} </p>
 		{% if item.user_id == login_session.get('user_id')  %}
 			<p><a href="{{url_for('editItem', category_name=category_name, item_name=item_name) }} ">Edit</a></p>
 			<p><a href="{{url_for('deleteItem', category_name=category_name, item_name=item_name) }} ">Delete</a></p>

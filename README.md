@@ -10,10 +10,11 @@ Setup the database:
 `$ python database_setup.py`
 
 Populate the database:
-`$ python popdb.py`
+`$ python populate_database.py`
 
 Run: 
 `$ python project.py` 
+
 In your browser visit http://0.0.0.0:5000 to view the site. 
 
 ## Usage:

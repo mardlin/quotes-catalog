@@ -71,8 +71,10 @@ def showCategoryJSON(category_name):
     """Page to display items in a given category"""
 
     category = session.query(Category).filter_by(name=category_name).first()
-
-    return jsonify(category=category.serialize)
+    if category:
+        return jsonify(category=category.serialize)
+    else:
+        return 'Category does not exist', 404
 
 
 # helper functions
@@ -196,15 +198,6 @@ def deleteItem(category_name, item_name):
         return redirect(url_for('showCategory', category_name=category_name))
     return render_template('deleteItem.html', category_name=category_name,
                            item=itemToDelete, item_name=item_name)
-
-
-@app.route('/themes/<category_name>/quotes/json')
-def jsonCategory(category_name):
-    """return data in a json format."""
-
-    return jsonify({
-        'page': 'category json endpoint.'
-        })
 
 
 @app.errorhandler(404)

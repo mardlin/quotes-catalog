@@ -172,7 +172,6 @@ def gconnect():
     login_session['username'] = user_info.name
     login_session['picture'] = user_info.picture
 
-    output = 'something'
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'

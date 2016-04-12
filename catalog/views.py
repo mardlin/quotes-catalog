@@ -2,21 +2,18 @@ from catalog import app
 from flask import render_template, request, redirect, url_for
 from flask import jsonify, flash, make_response
 from flask.ext.seasurf import SeaSurf
-
+# import for creating route decorators
+from functools import wraps
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.hybrid import hybrid_property
 from database_setup import Base, Category, Item, User
-
 # login_session will be a dict for storing a user's session variables
 from flask import session as login_session
-# IMPORTS for anti-forgergy state tokens
-import random
-import string
-
 # import and initialize SeaSurf for CSRF protection
 from flask.ext.seasurf import SeaSurf
 csrf = SeaSurf(app)
+
 
 engine = create_engine('sqlite:///quotes.db')
 Base.metadata.bind = engine
@@ -32,6 +29,37 @@ def inject_categories():
 
     categories = session.query(Category).all()
     return dict(categories=categories)
+
+
+# decorator function to check for logged in status
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' in login_session:
+            print "user is logged in"
+            return f(*args, **kwargs)
+        else:
+            flash("You must login first")
+            return redirect(url_for('showLogin'))
+    return decorated_function
+
+
+def check_permission(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        item = getItem(category_name=kwargs["category_name"],
+                       item_name=kwargs["item_name"])
+
+        if login_session['user_id'] == item.user_id:
+            print "user has permission"
+            return f(*args, **kwargs)
+        else:
+            flash("Only the item's creator can edit an item")
+            return redirect(url_for('showItem',
+                                    category_name=kwargs["category_name"],
+                                    item_name=kwargs["item_name"]))
+        # return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/themes')
@@ -86,6 +114,7 @@ def getItem(category_name, item_name):
     # use .first() to get an empty list if there is no match
     item = category_items.filter_by(name=item_name).first()
     return item
+    return item
 
 
 @app.route('/themes/<category_name>/<item_name>')
@@ -123,14 +152,9 @@ def firstThreeWords(description):
 
 
 @app.route('/themes/<category_name>/add', methods=['GET', 'POST'])
+@login_required
 def addItem(category_name):
     """Page to display for adding an item"""
-
-    user_id = login_session.get('user_id')
-
-    if user_id is None:
-        flash("You must login to add an item")
-        return redirect(url_for('showCategory', category_name=category_name))
 
     category = session.query(Category).filter_by(name=category_name).first()
     if request.method == 'POST':
@@ -151,16 +175,12 @@ def addItem(category_name):
 
 
 @app.route('/themes/<category_name>/<item_name>/edit', methods=['GET', 'POST'])
+@login_required
+@check_permission
 def editItem(category_name, item_name):
     """Page to display for editing an item"""
 
-    category = session.query(Category).filter_by(name=category_name).first()
     itemToEdit = getItem(category_name=category_name, item_name=item_name)
-
-    if login_session['user_id'] != itemToEdit.user_id:
-        flash("Only the item's creator can edit an item")
-        return redirect(url_for('showItem', category_name=category_name,
-                        item_name=item_name))
 
     if request.method == 'POST':
         itemToEdit.description = request.form['description']
@@ -181,14 +201,12 @@ def editItem(category_name, item_name):
 
 @app.route('/themes/<category_name>/<item_name>/delete',
            methods=['GET', 'POST'])
+@login_required
+@check_permission
 def deleteItem(category_name, item_name):
     """Page to display for deleting an item"""
 
     itemToDelete = getItem(category_name=category_name, item_name=item_name)
-    if login_session['user_id'] != itemToDelete.user_id:
-        flash("Only the item's creator can delete an item")
-        return redirect(url_for('showItem', category_name=category_name,
-                        item_name=item_name))
 
     if request.method == 'POST':
         session.delete(itemToDelete)

@@ -3,24 +3,20 @@
 {% block title %}editItem{% endblock %}
 
 {% block content %}
-	<h2>Edit the quote on {{ item_name }}:</h2> 
-	<p>{{item.name}}</p>
+	<h2>Edit the "{{ item_name }}" quote:</h2> 
 
-	<form action="{{url_for('addItem', category_name=category_name)}}" method="POST">
+	<form action="{{url_for('editItem', category_name=category_name, item_name=item_name)}}" method="POST">
 		<div class="form-group">
-			<label for="name">What is your quote about?:</label><input class="form-control" type="text" name="name" placeholder="In 2 or 3 words"><br/>
+			<label for="description">The Quote</label><textarea class="form-control" name="description">{{ item.description }}</textarea><br/>
 		</div>
 		<div class="form-group">
-			<label for="description">The Quote</label><textarea class="form-control" name="description"></textarea><br/>
-		</div>
-		<div class="form-group">
-			<label for="image">Who said it?</label><input class="form-control" type="text" name="image"><br/>
+			<label for="author">Who said it?</label><input class="form-control" type="text" name="author" value="{{item.author}}"><br/>
 		</div>
 		<div class="form-group">
 		    <input class="form-control" type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 		</div>
 		<div class="form-group">
-			<input class="btn btn-default" type="submit" value="Add item"></input><br/>
+			<input class="btn btn-default" type="submit" value="Update quote"></input><br/>
 		</div>
 	</form>
 {% endblock content %}
